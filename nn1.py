@@ -2,7 +2,6 @@ import gzip
 import cPickle
 import sys
 
-
 f = gzip.open('mnist.pkl.gz', 'rb')
 train_set, valid_set, test_set = cPickle.load(f)
 f.close()
@@ -22,6 +21,3 @@ for test_vector, test_digit in zip(test_x, test_y)[0:50]:
         print "OK"
     else:
         print "ERROR"
-
-
-
