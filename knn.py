@@ -4,7 +4,7 @@ import cPickle
 import sys
 import random
 import time
-from collections import Counter
+import collections
 
 from sklearn import neighbors
 import matplotlib.pyplot as plt
@@ -47,7 +47,7 @@ def implementation2_1nn():
 
 
 def most_common(lst):
-    data = Counter(lst)
+    data = collections.Counter(lst)
     return data.most_common(1)[0][0]
 
 
@@ -88,7 +88,7 @@ def nearest_mean():
     return error_count
 
 
-def scikit_knn(k):
+def sci_kit_knn(k):
     clf = neighbors.KNeighborsClassifier(k)
     clf.fit(train_x_copy, train_y)
 
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
         print "\nk:", k_param
 
-        error_percentage = scikit_knn(k_param) * 100 / SAMPLE_COUNT
+        error_percentage = sci_kit_knn(k_param) * 100 / SAMPLE_COUNT
         errors.append(error_percentage)
         print "Error percentage:", error_percentage, "%"
 
