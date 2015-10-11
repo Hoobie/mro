@@ -67,6 +67,26 @@ def knn(k):
     return error_count
 
 
+def nearest_mean():
+    x_vectors = [[] for _ in xrange(10)]
+    for train_vector, train_digit in zip(train_x_copy, train_y):
+        x_vectors[train_digit].append(train_vector)
+    means = [None for _ in xrange(10)]
+    for i in xrange(10):
+        means[i] = (numpy.mean(x_vectors[i], axis=0))
+
+    error_count = 0
+    for test_vector, test_digit in zip(test_x_copy, test_y):
+        nearest = (sys.maxint, [], [])
+        for i in xrange(10):
+            distance = count_distance(test_vector, means[i])
+            if distance < nearest[0]:
+                nearest = (distance, test_vector, i)
+        if test_digit != nearest[2]:
+            error_count += 1
+    return error_count
+
+
 def random_vector_scale(vector, scale):
     index = random.randint(0, 728)
     for x in vector:
@@ -89,24 +109,24 @@ if __name__ == "__main__":
     # s_range = [1]
     # s_range = xrange(0, 21)
     # for s in s_range:
-    k_range = xrange(1, 20)
-    for k_param in k_range:
-        train_x_copy = random_vector_scale(copy.deepcopy(train_x[0:SAMPLE_COUNT]), 1)
-        test_x_copy = random_vector_scale(copy.deepcopy(test_x[0:SAMPLE_COUNT]), 1)
+    # k_range = xrange(1, 20)
+    # for k_param in k_range:
+    train_x_copy = random_vector_scale(copy.deepcopy(train_x[0:SAMPLE_COUNT]), 1)
+    test_x_copy = random_vector_scale(copy.deepcopy(test_x[0:SAMPLE_COUNT]), 1)
 
-        start_time = time.time()
+    start_time = time.time()
 
-        print "\nk:", k_param
+    # print "\nk:", k_param
 
-        error_percentage = knn(k_param) * 100 / SAMPLE_COUNT
-        errors.append(error_percentage)
-        print "Error percentage:", error_percentage, "%"
+    error_percentage = nearest_mean() * 100 / SAMPLE_COUNT
+    errors.append(error_percentage)
+    print "Error percentage:", error_percentage, "%"
 
-        elapsed_time = time.time() - start_time
-        print "Elapsed time:", elapsed_time, "s"
+    elapsed_time = time.time() - start_time
+    print "Elapsed time:", elapsed_time, "s"
 
-    plt.plot(k_range, errors, label="error percentage")
-    plt.xlabel("k")
-    plt.ylabel("errors [%]")
-    plt.legend()
-    plt.show()
+    # plt.plot(k_range, errors, label="error percentage")
+    # plt.xlabel("k")
+    # plt.ylabel("errors [%]")
+    # plt.legend()
+    # plt.show()
