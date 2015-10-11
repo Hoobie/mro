@@ -4,12 +4,13 @@ import cPickle
 import sys
 import random
 import time
+from collections import Counter
 
 import matplotlib.pyplot as plt
 
 import numpy
 
-SAMPLE_COUNT = 500
+SAMPLE_COUNT = 1000
 
 
 def count_distance(vector1, vector2):
@@ -44,6 +45,28 @@ def implementation2_1nn():
     return error_count
 
 
+def most_common(lst):
+    data = Counter(lst)
+    return data.most_common(1)[0][0]
+
+
+def knn(k):
+    error_count = 0
+    for test_vector, test_digit in zip(test_x_copy, test_y):
+        subtracting = train_x_copy - test_vector
+        powered = subtracting ** 2
+        summed = numpy.sum(powered, axis=1)
+        neighbours = []
+        for i in xrange(1, k + 1):
+            min_index = numpy.argmin(summed)
+            neighbours.append(train_y[min_index])
+            summed[min_index] = sys.maxint
+        mc = most_common(neighbours)
+        if test_digit != mc:
+            error_count += 1
+    return error_count
+
+
 def random_vector_scale(vector, scale):
     index = random.randint(0, 728)
     for x in vector:
@@ -64,24 +87,26 @@ if __name__ == "__main__":
     errors = []
 
     # s_range = [1]
-    s_range = xrange(0, 21)
-    for s in s_range:
-        train_x_copy = random_vector_scale(copy.deepcopy(train_x[0:SAMPLE_COUNT]), s)
-        test_x_copy = random_vector_scale(copy.deepcopy(test_x[0:SAMPLE_COUNT]), s)
+    # s_range = xrange(0, 21)
+    # for s in s_range:
+    k_range = xrange(1, 20)
+    for k_param in k_range:
+        train_x_copy = random_vector_scale(copy.deepcopy(train_x[0:SAMPLE_COUNT]), 1)
+        test_x_copy = random_vector_scale(copy.deepcopy(test_x[0:SAMPLE_COUNT]), 1)
 
         start_time = time.time()
 
-        print "\ns:", s
+        print "\nk:", k_param
 
-        error_percentage = implementation2_1nn() * 100 / SAMPLE_COUNT
+        error_percentage = knn(k_param) * 100 / SAMPLE_COUNT
         errors.append(error_percentage)
         print "Error percentage:", error_percentage, "%"
 
         elapsed_time = time.time() - start_time
         print "Elapsed time:", elapsed_time, "s"
 
-    plt.plot(s_range, errors, label="error percentage")
-    plt.xlabel("s")
+    plt.plot(k_range, errors, label="error percentage")
+    plt.xlabel("k")
     plt.ylabel("errors [%]")
     plt.legend()
     plt.show()
