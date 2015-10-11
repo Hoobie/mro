@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 import numpy
 
-SAMPLE_COUNT = 10000
+SAMPLE_COUNT = 500
 
 
 def count_distance(vector1, vector2):
@@ -19,7 +19,7 @@ def count_distance(vector1, vector2):
     return dist
 
 
-def implementation1():
+def implementation1_1nn():
     error_count = 0
     for test_vector, test_digit in zip(test_x_copy, test_y):
         nearest = (sys.maxint, [], [])
@@ -32,7 +32,7 @@ def implementation1():
     return error_count
 
 
-def implementation2():
+def implementation2_1nn():
     error_count = 0
     for test_vector, test_digit in zip(test_x_copy, test_y):
         subtracting = train_x_copy - test_vector
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     errors = []
 
-    #s_range = [1]
+    # s_range = [1]
     s_range = xrange(0, 21)
     for s in s_range:
         train_x_copy = random_vector_scale(copy.deepcopy(train_x[0:SAMPLE_COUNT]), s)
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
         print "\ns:", s
 
-        error_percentage = implementation2() * 100 / SAMPLE_COUNT
+        error_percentage = implementation2_1nn() * 100 / SAMPLE_COUNT
         errors.append(error_percentage)
         print "Error percentage:", error_percentage, "%"
 
