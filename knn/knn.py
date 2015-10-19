@@ -108,7 +108,7 @@ def random_vector_scale(vector, scale):
 
 
 if __name__ == "__main__":
-    f = gzip.open('mnist.pkl.gz', 'rb')
+    f = gzip.open('../mnist.pkl.gz', 'rb')
     train_set, valid_set, test_set = cPickle.load(f)
     f.close()
 
